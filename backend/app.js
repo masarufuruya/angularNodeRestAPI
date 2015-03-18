@@ -3,9 +3,7 @@ var express = require('express');
 
 var app = express();
 
-// バックエンドをNodeでアクセスを受ける
-app.get('/backend', function(req, res) {
-  res.send('Hello world');
-});
+// ルーティング設定
+require('./router.js')(app);
 
 app.listen(3000);
