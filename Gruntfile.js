@@ -1,46 +1,46 @@
 // Generated on 2015-03-17 using generator-angular 0.11.1
 'use strict';
 
-// # Globbing
-// for performance reasons we're only matching one level down:
-// 'test/spec/{,*/}*.js'
-// use this if you want to recursively match all subfolders:
-// 'test/spec/**/*.js'
-
 module.exports = function(grunt) {
 
   //以下を追加
   var proxySnippet = require('grunt-connect-proxy/lib/utils').proxyRequest;
 
-  // grunt-*のパターンのプラグインを自動でロードする
+  // package.json内に書かれているgrunt-*のパターンのプラグインを自動でロードする
   // 次のように書く必要が無くなる(例: grunt.loadNpmTasks('grunt-contrib-watch'))
+  // Gruntfileでタスクを読み込んでいないのは、大体ここで読み込んでる
   require('load-grunt-tasks')(grunt);
 
-  // Time how long tasks take. Can help when optimizing build times
+  // タスクの実行時間を計測
   require('time-grunt')(grunt);
 
-  // Configurable paths for the application
-  var appConfig = {
-    app: require('./bower.json').appPath || 'app',
-    dist: 'dist'
-  };
-
-  // Define the configuration for all the tasks
+  // 全てのタスクの設定を記述
   grunt.initConfig({
 
-    // Project settings
-    yeoman: appConfig,
+    yeoman: {
+      // クライアント(angular)のアプリルートパス
+      app: require('./bower.json').appPath || 'app',
+      dist: 'dist'
+    },
 
-    // Watches files for changes and runs tasks based on the changed files
+    // grunt-contrib-watch
+    // https: //github.com/gruntjs/grunt-contrib-watch
     watch: {
+      // 分類分け
       bower: {
+        // 監視対象のファイル名
         files: ['bower.json'],
+        // イベントが発生した時に実行するタスク名
         tasks: ['wiredep']
       },
       js: {
+        // <%= %>はJSのコードを実行する
+        // angularのJSコードを読み込む
         files: ['<%= yeoman.app %>/scripts/{,*/}*.js'],
+        // newerを頭につけると変更したファイルのみ対象になる(grunt-newer)
         tasks: ['newer:jshint:all'],
         options: {
+          // livereloadを35729ポートで実行
           livereload: '<%= connect.options.livereload %>'
         }
       },
@@ -95,7 +95,7 @@ module.exports = function(grunt) {
                 '/app/styles',
                 connect.static('./app/styles')
               ),
-              connect.static(appConfig.app)
+              connect.static('<%= yeoman.app %>')
             ];
           }
         }
@@ -111,7 +111,7 @@ module.exports = function(grunt) {
                 '/bower_components',
                 connect.static('./bower_components')
               ),
-              connect.static(appConfig.app)
+              connect.static('<%= yeoman.app %>')
             ];
           }
         }
